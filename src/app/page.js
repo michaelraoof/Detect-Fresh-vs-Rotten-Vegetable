@@ -172,7 +172,9 @@ export default function Home() {
       {/* Text Results */}
       {result && (
         <div className="mt-8 p-6 bg-gray-50 rounded-lg">
-          <h2 className="text-xl font-semibold mb-4">Detection Summary:</h2>
+          <h2 className="text-xl font-semibold mb-4 text-gray-500 ">
+            Detection Summary:
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {result?.predictions?.map((item, index) => {
               const [status, vegetable] = item.class.split("_");
