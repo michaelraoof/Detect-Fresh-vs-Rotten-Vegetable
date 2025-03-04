@@ -89,6 +89,9 @@ export default function Home() {
       {/* Salute Section */}
       <div className="mt-8 text-center">
         <h2 className="text-4xl mb-4">A Special Salute to General Fady! 🫡</h2>
+        <br />
+        <br />
+
         <div className="inline-block animate-bounce">
           <img
             src="/salute.gif"
