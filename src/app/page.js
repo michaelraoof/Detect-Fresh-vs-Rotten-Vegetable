@@ -186,7 +186,7 @@ export default function Home() {
                           : "bg-green-600"
                       }`}
                     ></div>
-                    <span className="font-medium capitalize">
+                    <span className=" text-gray-500 font-medium capitalize">
                       {vegetable.toLowerCase()}
                     </span>
                     <span className="text-gray-500 text-sm">
