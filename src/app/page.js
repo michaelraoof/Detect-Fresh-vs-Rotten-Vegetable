@@ -1,101 +1,122 @@
-import Image from "next/image";
+"use client";
+import { useState, useEffect } from "react";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [mounted, setMounted] = useState(false);
+  const [file, setFile] = useState(null);
+  const [result, setResult] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  // Wait until the component is mounted on the client
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    // Render nothing until the component is mounted to avoid SSR mismatches.
+    return null;
+  }
+
+  // Convert file to base64 string (without data URL prefix)
+  const loadImageBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        // Remove data URL prefix
+        const base64String = reader.result.split(",")[1];
+        resolve(base64String);
+      };
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!file) return;
+    setLoading(true);
+    try {
+      const base64Image = await loadImageBase64(file);
+      const response = await fetch("/api/detect", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image: base64Image }),
+      });
+      const data = await response.json();
+      setResult(data);
+    } catch (error) {
+      console.error("Error during detection:", error);
+      setResult({ error: "Detection failed" });
+    }
+    setLoading(false);
+  };
+
+  return (
+    <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
+      <div className="mt-8 text-center">
+        <h2 className="text-4xl mb-4">A Special Salute to General Fady! 🫡</h2>
+        <br />
+        {/* Animated GIF container */}
+        <div className="inline-block animate-bounce">
+          <img
+            src="/salute.gif" // Place your GIF in public folder
+            alt="Military salute animation"
+            className="w-48 h-48 rounded-lg shadow-lg"
+          />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+
+        {/* Animated text */}
+        <p className="mt-4 text-lg font-semibold animate-pulse text-blue-600">
+          "Honor and Loyalty!"
+        </p>
+      </div>
+      <h1>Fresh vs Rotten Vegetable Detection and</h1>
+      <form onSubmit={handleSubmit}>
+        <input
+          class="cursor-pointer	"
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+        />
+        <button
+          class="cursor-pointer	"
+          type="submit"
+          style={{ marginLeft: "1rem" }}
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          {loading ? "Detecting..." : "Detect"}
+        </button>
+      </form>
+      {result && (
+        <div style={{ marginTop: "2rem", color: "black" }}>
+          <h2>Detection Result:</h2>
+          <pre style={{ background: "#f4f4f4", padding: "1rem" }}>
+            {result?.predictions?.map((item, index) => {
+              const [condition, vegetable] = item.class.split("_");
+              return (
+                <div key={index} className="mb-2 p-2 border rounded">
+                  <span className="font-semibold">Vegetable type: </span>
+                  {vegetable.toLowerCase()}
+                  <br />
+                  <span className="font-semibold">Condition: </span>
+                  <span
+                    className={`${
+                      condition.toLowerCase() === "rotten"
+                        ? "text-red-600"
+                        : "text-green-600"
+                    }`}
+                  >
+                    {condition.toLowerCase()}
+                  </span>
+                </div>
+              );
+            })}
+          </pre>
+        </div>
+      )}
     </div>
   );
 }
