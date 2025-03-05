@@ -87,22 +87,7 @@ export default function Home() {
   return (
     <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
       {/* Salute Section */}
-      <div className="mt-8 text-center">
-        <h2 className="text-4xl mb-4">A Special Salute to General Fady! 🫡</h2>
-        <br />
-        <br />
-
-        <div className="inline-block animate-bounce">
-          <img
-            src="/salute.gif"
-            alt="Military salute animation"
-            className="w-48 h-48 rounded-lg shadow-lg"
-          />
-        </div>
-        <p className="mt-4 text-lg font-semibold animate-pulse text-blue-600">
-          "Honor and Loyalty!"
-        </p>
-      </div>
+      <SaluteSection />
 
       {/* Detection Interface */}
       <h1 className="text-2xl mt-8">Fresh vs Rotten Vegetable Detection</h1>
@@ -203,6 +188,49 @@ export default function Home() {
             })}
           </div>
         </div>
+      )}
+    </div>
+  );
+}
+function SaluteSection() {
+  const [showCool, setShowCool] = useState(false);
+
+  const handleClick = () => {
+    setShowCool((prev) => !prev);
+  };
+
+  return (
+    <div className="mt-8 text-center cursor-pointer" onClick={handleClick}>
+      {!showCool ? (
+        <>
+          <h2 className="text-4xl mb-4">A Special Salute to General Fady! 🫡</h2>
+          <br/><br/>
+          <div className="inline-block animate-bounce">
+            <img
+              src="/salute.gif"
+              alt="Military salute animation"
+              className="w-48 h-48 rounded-lg shadow-lg"
+            />
+          </div>
+          <p className="mt-4 text-lg font-semibold animate-pulse text-blue-600">
+            "Honor and Loyalty!"
+          </p>
+        </>
+      ) : (
+        <>
+          <h2 className="text-4xl mb-4">Stand Down, Soldier! 🎖️</h2>
+          <div className="inline-block animate-spin">
+            <img
+            key="555"
+              src="/coolMilitary.gif"
+              alt="Cool military action"
+              className="w-56 h-56 rounded-lg shadow-lg"
+            />
+          </div>
+          <p className="mt-4 text-lg font-bold text-green-600">
+          General Fady, Hooah! Your command ignites Operation Ironclad—lead with honor!
+          </p>
+        </>
       )}
     </div>
   );
